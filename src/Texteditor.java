@@ -11,12 +11,23 @@ public class Texteditor implements ActionListener {
 
     JMenuBar menuBar;
 
-    JMenu file, edit;
+    JMenu file, edit, format, color;
 
     JMenuItem newFile, openFile, saveFile;
     JMenuItem cut, copy, paste, selectAll, close;
+    JMenuItem wrap, arial, csms, tmr, font8, font12, font16, font20, font24, font28;
+    JMenu font, fontSize;
 
     JTextArea textArea;
+
+    boolean wrapOn = false;
+    Font arialFont, comicSans, timesNewRoman;
+    String selectedFont = "Arial";
+    int defaultFontSize = 16;
+
+    // COLOR MENU
+    JMenuItem color1, color2, color3;
+
     Texteditor (){
         // Initialize the frame
         frame = new JFrame();
@@ -31,6 +42,8 @@ public class Texteditor implements ActionListener {
         // Initialize menu
         file = new JMenu("File");
         edit = new JMenu("Edit");
+        format = new JMenu("Format");
+        color = new JMenu("Color");
 
         // Initialize file menu items
         newFile = new JMenuItem("New Window");
@@ -63,10 +76,85 @@ public class Texteditor implements ActionListener {
         edit.add(selectAll);
         edit.add(close);
 
+        // Initialize format menu items
+        wrap = new JMenuItem("Word Wrap: Off");
+        wrap.addActionListener(this);
+        wrap.setActionCommand("Word Wrap");
+        format.add(wrap);
+
+        font = new JMenu("Font");
+        format.add(font);
+
+        // Add Font Style to Font
+        arial = new JMenuItem("Arial");
+        arial.addActionListener(this);
+        arial.setActionCommand("Arial");
+        font.add(arial);
+
+        csms = new JMenuItem("Comic Sans MS");
+        csms.addActionListener(this);
+        csms.setActionCommand("Comic Sans MS");
+        font.add(csms);
+
+        tmr = new JMenuItem("Times New Roman");
+        tmr.addActionListener(this);
+        tmr.setActionCommand("Times New Roman");
+        font.add(tmr);
+
+        fontSize = new JMenu("Font Size");
+        format.add(fontSize);
+
+        // Adding font size
+        font8 = new JMenuItem("8");
+        font8.addActionListener(this);
+        font8.setActionCommand("size8");
+        fontSize.add(font8);
+
+        font12 = new JMenuItem("12");
+        font12.addActionListener(this);
+        font12.setActionCommand("size12");
+        fontSize.add(font12);
+
+        font16 = new JMenuItem("16");
+        font16.addActionListener(this);
+        font16.setActionCommand("size16");
+        fontSize.add(font16);
+
+        font20 = new JMenuItem("20");
+        font20.addActionListener(this);
+        font20.setActionCommand("size20");
+        fontSize.add(font20);
+
+        font24 = new JMenuItem("24");
+        font24.addActionListener(this);
+        font24.setActionCommand("size24");
+        fontSize.add(font24);
+
+        font28 = new JMenuItem("28");
+        font28.addActionListener(this);
+        font28.setActionCommand("size28");
+        fontSize.add(font28);
+
+        // Initialize Color Menu items
+        color1 = new JMenuItem("Black");
+        color1.addActionListener(this);
+        color.add(color1);
+
+        color2 = new JMenuItem("Green");
+        color2.addActionListener(this);
+        color.add(color2);
+
+        color3 = new JMenuItem("Blue");
+        color3.addActionListener(this);
+        color.add(color3);
+
+
 
         // Add menu items to menubar
         menuBar.add(file);
         menuBar.add(edit);
+        menuBar.add(format);
+        menuBar.add(color);
 
         // Set MenuBar to frame
         frame.setJMenuBar(menuBar);
@@ -88,6 +176,8 @@ public class Texteditor implements ActionListener {
         frame.setVisible(true);
         frame.setLayout(null);
     }
+
+
     @Override
     public void actionPerformed(ActionEvent actionEvent){
         if(actionEvent.getSource() == cut){
@@ -154,7 +244,66 @@ public class Texteditor implements ActionListener {
         if(actionEvent.getSource()==newFile){
             Texteditor newTextEditor = new Texteditor();
         }
+
+        if(actionEvent.getSource() == wrap){
+            if(!wrapOn){
+                wrapOn = true;
+                textArea.setLineWrap(true);
+                textArea.setWrapStyleWord(true);
+                wrap.setText("Word Wrap: On");
+            } else if(wrapOn){
+                wrapOn = false;
+                textArea.setLineWrap(false);
+                textArea.setWrapStyleWord(false);
+                wrap.setText("Word Wrap: Off");
+            }
+        }
+
+        // Font Style
+        if(actionEvent.getSource() == arial) setFont("Arial");
+        if(actionEvent.getSource() == csms) setFont("Comic Sans MS");
+        if(actionEvent.getSource() == tmr) setFont("Times New Roman");
+
+
+        if(actionEvent.getSource() == font8) createFont(8);
+        if(actionEvent.getSource() == font12) createFont(12);
+        if(actionEvent.getSource() == font16) createFont(16);
+        if(actionEvent.getSource() == font20) createFont(20);
+        if(actionEvent.getSource() == font24) createFont(24);
+        if(actionEvent.getSource() == font28) createFont(28);
+
+        if(actionEvent.getSource() == color1) textArea.setForeground(Color.black);
+        if(actionEvent.getSource() == color2) textArea.setForeground(Color.green);
+        if(actionEvent.getSource() == color3) textArea.setForeground(Color.blue);
     }
+
+    public void createFont(int fontSize){
+        arialFont = new Font("Arial", Font.PLAIN, fontSize);
+        comicSans = new Font("Comic Sans MS", Font.PLAIN, fontSize);
+        timesNewRoman = new Font("Times New Roman", Font.PLAIN, fontSize);
+
+        setFont(selectedFont);
+    }
+
+    public void setFont(String font){
+        selectedFont = font;
+
+        switch(selectedFont){
+            case "Arial":
+                textArea.setFont(arialFont);
+                break;
+
+            case "Comis Sans MS":
+                textArea.setFont(comicSans);
+                break;
+
+            case "Times New Roman":
+                textArea.setFont(timesNewRoman);
+                break;
+        }
+    }
+
+
     public static void main(String[] args) {
         Texteditor texteditor = new Texteditor();
     }
